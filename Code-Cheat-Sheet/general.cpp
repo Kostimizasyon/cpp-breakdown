@@ -42,56 +42,6 @@ struct GeneralLogic {
 
     }
 
-    void TypeModifiersInCPP() {
-
-        //In c++ we have 4 type modifiers:
-        
-        //1 Signed: Indicates that the given type will use one bit to indicate its sign (+/-)
-        // Can be applied to -> int,char and other modifiers (that isnt unsigned)
-
-        signed int signed_int;     // -2147483648 to 2147483647
-        signed char signed_char;   // -128 to 127
-
-
-        //2 Unsigned: Instead of dedicating a bit to a sign, instead we use it to also display a number letting it display bigger numbers but cant be negative
-        // Can be applied to -> int,char and other modifiers (that isnt signed)
-
-        unsigned int unsigned_int;   // 0 to 4294967295 
-        unsigned char unsigned_char; // 0 to 255
-
-        //3 Short: Decreases the size of the data type in the memory by half, leading to less numbers but less memory
-        // Can only be applied on ints
-
-        short int short_int;        //  -32768 to 32767 
-        std::cout << sizeof(short int) << "\n"; // 2 bytes instead of 4
-        
-        //4 Long: Increases the size of the data type in the memory by double, leading to less numbers but less memory
-        // Can be applied to -> int,doubles and other modifiers (that isnt long long)
-
-        long int long_int;          // -9223372036854775808 to 9223372036854775807
-        std::cout << sizeof(long int) << "\n"; // 8 bytes instead of 4
-
-        unsigned long int unsigned_long_int; // 0 to 18446744073709551615
-
-        long double long_double;  //TOO HIGH
-        std::cout << sizeof(long double ) << "\n"; // 16 bytes instead of 8
-        
-        //-------------------OVERFLOW----------------------
-
-        //The act of overflow is about bits => 1111 lets say this is our limit for a number, if we were to add +1 => if we only have 4 bits to hold numbers it would be 0000
-        //so our value would reset to 0;
-
-        unsigned char a = 255;
-        std::cout << a + 1 << "\n"; //This will print 0 because of overflow.
-
-        //Now for signed cases since we preserve one bit for the sign, 0111 would be our max value, if we were to add +1 => 
-        //overflow would cause the sign bit to flip and the number would become the negative max of our data type
-
-        signed char b = 127;
-        std::cout << b+1 << "\n";  //This will print -128 cuz of overflow 
-
-    }
-
     void TypeConversionInCPP() {
         double x = 5.0;
             //Type conversions are the act of converting a data type to another data type such that it wont lose meaning
@@ -146,6 +96,53 @@ struct GeneralLogic {
 
                     //4)Reinterpet Cast:
 
+    }
+
+    void AttributesInCPP() {
+
+        //Attributes are used in c++ to enforce constraints on the code, give additional info to the compiler for optimizaation, supress or express certain warnings
+
+        //1) NORETURN => Lets the compiler optimize better for void functions or generate better warnings
+
+        [[noreturn]] void f() {}
+        int a = f(); //Will give warning
+
+        //2) DEPRACTED => makes the compiler throw a warning message saying that the releated thing is depracted
+        //Can work on functions, namespaces, structs, classes, variables.
+
+        [[deprecated("CAN OVERFLOW")]] void gets() {}
+
+        //3) NODISCARD => makes the compiler throw a warning to the caller saying that this functions return should be utilized
+
+        [[nodiscard]] int h() {return 0;}
+        h(); //will give warning
+
+        //4) MAYBE_UNUSED => supresses the compilers error about unused stuff
+
+        [[maybe_unused]] const char a = 'b';
+
+        // 5) FALLTHROUGH — intentional fall through switch cases
+        switch(x) {
+            case 1:
+                [[fallthrough]];  // ✅ semicolon needed
+            case 2:
+                break;
+        }
+
+        // 6) LIKELY / UNLIKELY — branch prediction hint
+        switch(x) {
+            [[likely]] case 1:    // ✅ hint: this case is most common
+                break;
+            [[unlikely]] case 2:  // ✅ hint: this case is rare
+                break;
+        }
+
+        // 7) NO_UNIQUE_ADDRESS — lets compiler reuse memory for empty members
+        struct Empty {};
+        struct Foo {
+            [[no_unique_address]] Empty e;  // takes 0 bytes instead of 1
+            int x;
+        };
     }
 
 };

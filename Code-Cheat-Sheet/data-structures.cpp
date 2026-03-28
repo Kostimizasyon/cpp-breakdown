@@ -1,38 +1,32 @@
 #include "cheat-header.h"
 
-template <typename data_type>
+template <typename T>
 struct DataStructuresInCPP {
 
-    void LinkedListsInCPP() {   
+    //EMPLACE VS PUSH => push and emplace are basically the same except the fact that emplace does everything inline so its better most of the time
+    // edgecase for push => if an object is already created THEN being inserted then push is better as emplace will try to keep inline
 
-        struct Node {
-            int data;
-            Node* next;
-        };
+    //'[]' is DANGEROUS =>IT WONT DO BOUNDS CHECKING, if it is out of bounds it will do undefined behaviour
+    //use .at(index)
 
-        Node* n1 = new Node{10,nullptr};
-        Node* n2 = new Node{20,nullptr};
-        n1->next = n2; //Linking the nodes together
-
-    }
-
+    //ARRAY VS VECTOR => arrays are better for performance cuz stack but dynamic is also a really big deal
     void VectorsInCPP() {
-        int value = 5;
+        T value = 5;
 
-        std::vector<int> vec = {};
+        std::vector<T> vec = {};
 
-        //Vectors are dynamic arrays for c++
+        //Vectors are dynamic arrays for c++, they live on the heap
         
-        std::vector<int> arr = {};
+        std::vector<T> arr = {};
 
         //GENERATION OF VECTORS:
 
-        std::vector<int> customGenVector(15); //15 elements
+        std::vector<T> customGenVector(15); //basically std::array<int, 15> but slower as it lives on the heap instead of stack
 
-        std::generate(customGenVector.begin(), customGenVector.end(), [&] (int i) {return i*i;}); //Generating a custom vector that will be ran through a function
+        std::generate(customGenVector.begin(), customGenVector.end(), [&] (T i) {return i*i;}); //Generating a custom vector that will be ran through a function
 
         //requires #include <numeric>
-        int numberToIncrementFrom = 1;
+        T numberToIncrementFrom = 1;
         std::iota(customGenVector.begin(), customGenVector.end(), numberToIncrementFrom); //It will inrement from this number till it reaches the end of the vector
     
 
@@ -52,7 +46,7 @@ struct DataStructuresInCPP {
         //2)Access Elements:
 
             arr[1]; 
-            //or , both O(1)
+            //or , both O(1) BUT [] WONT DO BOUNDARY CHECKING
             arr.at(1);
 
             arr.front();
@@ -92,6 +86,47 @@ struct DataStructuresInCPP {
             //std::fill(start,end,value)
 
             std::unique(arr.begin(), arr.end()); //Removes consecutive duplicates
+
+    }
+
+    void ArraysInCPP() {
+        int index = 0;
+        //Static arrays, they live on the heap
+
+        T arr[5] oldArray; //C style arrays DONT USE => code smell, decays to pointer no size or bounds checking
+        std::array<T,5> coolArray; //knows its size, bounds checking
+
+        //OPERATIONS
+
+            //Value access:
+            coolArray.at(index);
+            coolArray[index];
+            coolArray.front();
+            coolArray.back();
+
+            //Capacity:
+
+            coolArray.empty(); //returns bool
+            coolArray.size(); //ACTUALLY KNOWS ITS SIZE
+            coolArray.max_size(); //returns max size
+
+            //Operations:
+            
+                //std::fill(start,end,value)
+                //std::swap(coolVec1, coolVec2) //swapp array elements
+            
+    }
+
+    void LinkedListsInCPP() {   
+
+        struct Node {
+            T data;
+            Node* next;
+        };
+
+        Node* n1 = new Node{10,nullptr};
+        Node* n2 = new Node{20,nullptr};
+        n1->next = n2; //Linking the nodes together
 
     }
 
@@ -152,4 +187,40 @@ struct DataStructuresInCPP {
 
         }
 
-};
+    void StacksInCPP() {
+        int value = 0;
+        //LIFO, we have 3 stack types in C++:
+        std::stack<int, std::vector<int>> vecStack; //Implemented via vectors, fastest, cache friendly but has to realocate while growing sometimes
+        std::stack<int, std::deque<int>> defaultStack; //Implemented via both LL and arrays, no realocate problem but slower than vectors //DEFAULT
+        std::stack<int, std::list<int>> llStack; //literally no reason to use
+
+        //Operations:
+
+            defaultStack.push(value); //Add last element
+            defaultStack.emplace(value); //Add last element
+            defaultStack.pop(); //Remove last element
+            int top = defaultStack.top(); //Returns last element
+            bool isEmpty = defaultStack.empty();
+            int size = defaultStack.size();
+
+    }
+
+    void QueueInCPP() {
+
+        int value = 0;
+        //FIFO, we have 2 queue types in C++:
+        std::queue<int, std::deque<int>> defaultQueue; //Implemented via both LL and arrays, no realocate problem but slower than vectors //DEFAULT
+        std::queue<int, std::list<int>> llQueue; //literally no reason to use
+
+        //Operations:
+            defaultQueue.push(value);    // add to BACK
+            defaultQueue.emplace(value); // add to BACK in place
+            defaultQueue.pop();          // remove from FRONT
+            int front = defaultQueue.front(); // peek at FRONT
+            int back = defaultQueue.back();   // peek at BACK
+            defaultQueue.empty();
+            defaultQueue.size();
+
+    }
+
+};  

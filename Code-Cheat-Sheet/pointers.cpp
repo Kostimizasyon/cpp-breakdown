@@ -1,5 +1,6 @@
 #include "cheat-header.h"
 
+template <typename data_type>
 struct Pointers {
 
         void PointersandReferencesInCpp() {

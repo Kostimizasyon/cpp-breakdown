@@ -42,17 +42,18 @@ struct OOPInCPP {
                 std::string first;
                 std::string last;
             public:
-                ConstructorSyntax(const std::string first,const std::string last): first(first), last(last) {};
+                ConstructorSyntax(const std::string first,const std::string last): first(first), last(last) {}
 
                 ConstructorSyntax(const std::string first,const std::string last) {
                     this->first = first;
                     this->last = last;
-                };
+                }
 
                 virtual ~ConstructorSyntax() {
                      //destruction, we NEED virtual so we can tell our children to handle their own data aswell
-                    std::cout << "Class deleted!"
-                };
+                    std::cout << "Class deleted!";
+
+                }
 
                 virtual void print() { std::cout<< "This is Constructor call"<<std::endl; }; //virtual is a good practice as it will get the compiler to yell at you if you change soemthing but you dont "need need" it  
         };
